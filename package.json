@@ -1,0 +1,12 @@
+{
+  "name": "babel-plugin-replace-import-source-with-env",
+  "version": "0.0.1",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node test"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "tape": "^4.9.0"
+  }
+}
