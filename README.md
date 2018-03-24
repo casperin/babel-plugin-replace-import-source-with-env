@@ -46,8 +46,6 @@ The plugin needs to be configured what to look for:
   just continue with the next identifier.
 * `delimiters` - By default the plugin will look for `{process.env[delimiter]}`.
 
-```
-
 ## Licence
 
 MIT
