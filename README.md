@@ -11,7 +11,7 @@ import foo from "./hello.{WORLD}.js";
 ```
 
 ```sh
-// Run babel with WORLD set
+# Run babel with WORLD set
 WORLD=mundo babel your/code.js -o your/output.js
 ```
 
