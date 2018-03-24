@@ -35,6 +35,7 @@ The plugin needs to be configured what to look for:
         ]
     ]
 }
+```
 
 ## Options
 
