@@ -10,7 +10,7 @@ abstracted out into files.
 
 ## Install
 
-```js
+```sh
 npm install --save-dev babel-plugin-replace-import-source-with-env
 ```
 
