@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-replace-import-source-with-env",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Transforms imports from import x from '{A}' to import x from 'foo'",
   "keywords": [
     "babel",
