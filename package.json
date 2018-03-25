@@ -1,12 +1,30 @@
 {
-  "name": "babel-plugin-replace-import-source-with-env",
-  "version": "0.0.1",
-  "main": "src/index.js",
-  "scripts": {
-    "test": "node test"
-  },
-  "devDependencies": {
-    "babel-core": "^6.26.0",
-    "tape": "^4.9.0"
-  }
+    "name": "babel-plugin-replace-import-source-with-env",
+    "version": "0.0.1",
+    "description": "Transforms imports from import x from '{A}' to import x from 'foo'",
+    "keywords": [
+        "babel",
+        "plugin",
+        "transform",
+        "import",
+        "source"
+    ],
+    "main": "src/index.js",
+    "author": {
+        "name": "Gorm Casper",
+        "url": "http://gormcasper.com"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/casperin/babel-plugin-replace-import-source-with-env.git"
+    },
+    "homepage": "https://github.com/casperin/babel-plugin-replace-import-source-with-env",
+    "scripts": {
+        "test": "node test"
+    },
+    "devDependencies": {
+        "babel-core": "^6.26.0",
+        "tape": "^4.9.0"
+    }
 }
