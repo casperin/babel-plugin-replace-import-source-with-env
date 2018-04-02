@@ -70,7 +70,6 @@ You can give it more options. Here are the options with their default values.
             "replace-import-source-with-env",
             {
                 "identifiers": [],
-                "strict": false,
                 "prefix": ".",
                 "postfix": "",
                 "fallback": "",
@@ -85,8 +84,6 @@ You can give it more options. Here are the options with their default values.
   the `env` variables. So in the above, the plugin will expect to be able to find
   a `process.env.TARGET` that is a string. If it doesn't it will use the
   fallback.
-* `strict`. If set to `true` it will not use the fallback, but instead throw an
-  error.
 * `prefix` of the replaced string. It's the `.` preceding the env variable.
   Will not be added in case the value to be inserted is an empty string (see
   below for explanation).
