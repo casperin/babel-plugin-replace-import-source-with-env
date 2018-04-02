@@ -21,10 +21,12 @@
   },
   "homepage": "https://github.com/casperin/babel-plugin-replace-import-source-with-env",
   "scripts": {
-    "test": "node test"
+    "test": "node test",
+    "prettier": "prettier --no-semi --tab-width=4 --write {src,test}/*.js"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
+    "prettier": "^1.11.1",
     "tape": "^4.9.0"
   }
 }

@@ -1,4 +1,4 @@
-module.exports = function ({types : t}) {
+module.exports = function({ types: t }) {
     return {
         visitor: {
             ImportDeclaration(path, state) {
@@ -8,7 +8,10 @@ module.exports = function ({types : t}) {
                     fallback = state.opts.fallback || "",
                     dels = state.opts.delimiters || ["{", "}"],
                     value = path.node.source.value, // the last part of: import x from './y'
-                    ident, identPad, replacement, transforms
+                    ident,
+                    identPad,
+                    replacement,
+                    transforms
 
                 for (ident of identifiers) {
                     identPad = dels[0] + ident + dels[1]
@@ -17,11 +20,7 @@ module.exports = function ({types : t}) {
                         continue
                     }
 
-                    replacement = process.env[ident]
-
-                    if (replacement === "undefined" || replacement == null) {
-                        replacement = fallback
-                    }
+                    replacement = process.env[ident] || fallback
 
                     if (replacement !== "") {
                         replacement = prefix + replacement + postfix
@@ -34,7 +33,7 @@ module.exports = function ({types : t}) {
                     return
                 }
 
-                transforms = path.node.specifiers.map(function (specifier) {
+                transforms = path.node.specifiers.map(function(specifier) {
                     return t.importDeclaration(
                         [specifier],
                         t.stringLiteral(value)

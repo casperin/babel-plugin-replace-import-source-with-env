@@ -1,9 +1,9 @@
 const babel = require("babel-core")
 const tape = require("tape")
 
-function transform (code, opt) {
+function transform(code, opt) {
     return babel.transform(code, {
-        plugins: [['./src', opt]]
+        plugins: [["./src", opt]]
     }).code
 }
 
@@ -13,7 +13,7 @@ const tests = [
         output: `import x from "./foo";`,
         envs: [],
         options: {
-            identifiers: ['not_found']
+            identifiers: ["not_found"]
         },
         description: "No substitution"
     },
@@ -21,11 +21,9 @@ const tests = [
     {
         input: `import x from "./foo/bar{x}.js";`,
         output: `import x from "./foo/bar.hello.js";`,
-        envs: [
-            ['x', 'hello']
-        ],
+        envs: [["x", "hello"]],
         options: {
-            identifiers: ['x']
+            identifiers: ["x"]
         },
         description: "Base test - one sub"
     },
@@ -33,12 +31,9 @@ const tests = [
     {
         input: `import { foo } from "bar{x}{y}.js";`,
         output: `import { foo } from "bar.a.b.js";`,
-        envs: [
-            ['x', 'a'],
-            ['y', 'b']
-        ],
+        envs: [["x", "a"], ["y", "b"]],
         options: {
-            identifiers: ['x', 'y']
+            identifiers: ["x", "y"]
         },
         description: "Two replaces"
     },
@@ -46,24 +41,19 @@ const tests = [
     {
         input: `import { foo } from "bar{x}{y}.js";`,
         output: `import { foo } from "bar.a{y}.js";`,
-        envs: [
-            ['x', 'a'],
-            ['y', 'b']
-        ],
+        envs: [["x", "a"], ["y", "b"]],
         options: {
-            identifiers: ['x']
+            identifiers: ["x"]
         },
         description: "Missing identifier"
     },
 
     {
-        input: `import { foo } from "bar{x}{y}.js";`,
-        output: `import { foo } from "bar.a.js";`,
-        envs: [
-            ['x', 'a'],
-        ],
+        input: `import { foo } from "bar{x}.js";`,
+        output: `import { foo } from "bar.js";`,
+        envs: [],
         options: {
-            identifiers: ['x', 'y']
+            identifiers: ["x"]
         },
         description: "Missing env variable defaults to empty string"
     },
@@ -71,11 +61,9 @@ const tests = [
     {
         input: `import { foo } from "bar{x}.js";\nconst a = 1;`,
         output: `import { foo } from "bar.a.js";\n\nconst a = 1;`,
-        envs: [
-            ['x', 'a'],
-        ],
+        envs: [["x", "a"]],
         options: {
-            identifiers: ['x']
+            identifiers: ["x"]
         },
         description: "Other types of code should not confuse the lib"
     },
@@ -83,12 +71,9 @@ const tests = [
     {
         input: `import { k } from "baz{x}.js";\nimport { s } from "baz{x}{y}.js";\nconst a = 1;`,
         output: `import { k } from "baz.a.js";\nimport { s } from "baz.a.b.js";\n\nconst a = 1;`,
-        envs: [
-            ['x', 'a'],
-            ['y', 'b']
-        ],
+        envs: [["x", "a"], ["y", "b"]],
         options: {
-            identifiers: ['x', 'y']
+            identifiers: ["x", "y"]
         },
         description: "Multiple lines"
     },
@@ -96,12 +81,10 @@ const tests = [
     {
         input: `import x from "./foo/bar#[x].js";`,
         output: `import x from "./foo/bar.hello.js";`,
-        envs: [
-            ['x', 'hello']
-        ],
+        envs: [["x", "hello"]],
         options: {
-            identifiers: ['x'],
-            delimiters: ['#[', ']']
+            identifiers: ["x"],
+            delimiters: ["#[", "]"]
         },
         description: "Change delimiters"
     },
@@ -109,12 +92,10 @@ const tests = [
     {
         input: `import x from "./foo/bar{x}.js";`,
         output: `import x from "./foo/bar_hello.js";`,
-        envs: [
-            ['x', 'hello']
-        ],
+        envs: [["x", "hello"]],
         options: {
             prefix: "_",
-            identifiers: ['x']
+            identifiers: ["x"]
         },
         description: "Change prefix"
     },
@@ -122,12 +103,10 @@ const tests = [
     {
         input: `import x from "./foo/bar{x}.js";`,
         output: `import x from "./foo/bar.helloFOO.js";`,
-        envs: [
-            ['x', 'hello']
-        ],
+        envs: [["x", "hello"]],
         options: {
             postfix: "FOO",
-            identifiers: ['x']
+            identifiers: ["x"]
         },
         description: "Change postfix"
     },
@@ -138,7 +117,7 @@ const tests = [
         envs: [],
         options: {
             fallback: "fallback",
-            identifiers: ['x']
+            identifiers: ["x"]
         },
         description: "Change fallback"
     }
@@ -146,11 +125,10 @@ const tests = [
 
 tests.forEach(test => {
     tape(test.description, t => {
-        test.envs.forEach(env => process.env[env[0]] = env[1])
+        test.envs.forEach(env => (process.env[env[0]] = env[1]))
         const actual = transform(test.input, test.options)
         t.equal(actual, test.output, "input should match output")
         t.end()
-        test.envs.forEach(env => process.env[env[0]] = undefined)
+        test.envs.forEach(env => delete process.env[env[0]])
     })
 })
-
