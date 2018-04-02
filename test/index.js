@@ -19,7 +19,7 @@ const tests = [
     },
 
     {
-        input: `import x from "./foo/bar.{x}.js";`,
+        input: `import x from "./foo/bar{x}.js";`,
         output: `import x from "./foo/bar.hello.js";`,
         envs: [
             ['x', 'hello']
@@ -31,7 +31,7 @@ const tests = [
     },
 
     {
-        input: `import { foo } from "bar.{x}.{y}.js";`,
+        input: `import { foo } from "bar{x}{y}.js";`,
         output: `import { foo } from "bar.a.b.js";`,
         envs: [
             ['x', 'a'],
@@ -44,8 +44,8 @@ const tests = [
     },
 
     {
-        input: `import { foo } from "bar.{x}.{y}.js";`,
-        output: `import { foo } from "bar.a.{y}.js";`,
+        input: `import { foo } from "bar{x}{y}.js";`,
+        output: `import { foo } from "bar.a{y}.js";`,
         envs: [
             ['x', 'a'],
             ['y', 'b']
@@ -57,20 +57,19 @@ const tests = [
     },
 
     {
-        input: `import { foo } from "bar.{x}.{y}.js";`,
-        output: `import { foo } from "bar.a.{y}.js";`,
+        input: `import { foo } from "bar{x}{y}.js";`,
+        output: `import { foo } from "bar.a.js";`,
         envs: [
             ['x', 'a'],
         ],
         options: {
-            identifiers: ['x', 'y'],
-            lax: true
+            identifiers: ['x', 'y']
         },
-        description: "Missing env variable with lax = true"
+        description: "Missing env variable defaults to empty string"
     },
 
     {
-        input: `import { foo } from "bar.{x}.js";\nconst a = 1;`,
+        input: `import { foo } from "bar{x}.js";\nconst a = 1;`,
         output: `import { foo } from "bar.a.js";\n\nconst a = 1;`,
         envs: [
             ['x', 'a'],
@@ -82,7 +81,7 @@ const tests = [
     },
 
     {
-        input: `import { k } from "baz.{x}.js";\nimport { s } from "baz.{x}.{y}.js";\nconst a = 1;`,
+        input: `import { k } from "baz{x}.js";\nimport { s } from "baz{x}{y}.js";\nconst a = 1;`,
         output: `import { k } from "baz.a.js";\nimport { s } from "baz.a.b.js";\n\nconst a = 1;`,
         envs: [
             ['x', 'a'],
@@ -95,7 +94,7 @@ const tests = [
     },
 
     {
-        input: `import x from "./foo/bar.#[x].js";`,
+        input: `import x from "./foo/bar#[x].js";`,
         output: `import x from "./foo/bar.hello.js";`,
         envs: [
             ['x', 'hello']
@@ -105,6 +104,43 @@ const tests = [
             delimiters: ['#[', ']']
         },
         description: "Change delimiters"
+    },
+
+    {
+        input: `import x from "./foo/bar{x}.js";`,
+        output: `import x from "./foo/bar_hello.js";`,
+        envs: [
+            ['x', 'hello']
+        ],
+        options: {
+            prefix: "_",
+            identifiers: ['x']
+        },
+        description: "Change prefix"
+    },
+
+    {
+        input: `import x from "./foo/bar{x}.js";`,
+        output: `import x from "./foo/bar.helloFOO.js";`,
+        envs: [
+            ['x', 'hello']
+        ],
+        options: {
+            postfix: "FOO",
+            identifiers: ['x']
+        },
+        description: "Change postfix"
+    },
+
+    {
+        input: `import x from "./foo/bar{x}.js";`,
+        output: `import x from "./foo/bar.fallback.js";`,
+        envs: [],
+        options: {
+            fallback: "fallback",
+            identifiers: ['x']
+        },
+        description: "Change fallback"
     }
 ]
 

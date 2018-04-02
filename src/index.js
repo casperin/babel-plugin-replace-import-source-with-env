@@ -1,5 +1,8 @@
 var defaultOptions = {
-    lax: false,
+    strict: false,
+    prefix: ".",
+    postfix: "",
+    fallback: "",
     delimiters: ["{", "}"],
     identifiers: []
 }
@@ -10,12 +13,15 @@ module.exports = function ({types : t}) {
             ImportDeclaration(path, state) {
                 var identifiers = state.opts.identifiers || defaultOptions.identifiers,
                     dels = state.opts.delimiters || defaultOptions.delimiters,
-                    lax = state.opts.lax || defaultOptions.lax,
+                    strict = state.opts.strict || defaultOptions.strict,
+                    prefix = state.opts.prefix || defaultOptions.prefix,
+                    postfix = state.opts.postfix || defaultOptions.postfix,
+                    fallback = state.opts.fallback || defaultOptions.fallback,
                     value = path.node.source.value, // the last part of: import x from './y'
                     substitute, ident, identPad, replacement, transforms
 
                 for (ident of identifiers) {
-                    identPad = `${dels[0]}${ident}${dels[1]}`
+                    identPad = dels[0] + ident + dels[1]
 
                     if (!value.includes(identPad)) {
                         continue
@@ -23,10 +29,14 @@ module.exports = function ({types : t}) {
 
                     replacement = process.env[ident]
                     if (replacement === "undefined" || replacement == null) {
-                        if (!lax) {
-                            throw new Error(`I am missing env variable: ${ident}`)
+                        if (strict) {
+                            throw new Error("I am missing env variable: " + ident)
                         }
-                        continue
+                        replacement = fallback
+                    }
+
+                    if (replacement !== "") {
+                        replacement = prefix + replacement + postfix
                     }
 
                     value = value.split(identPad).join(replacement)
