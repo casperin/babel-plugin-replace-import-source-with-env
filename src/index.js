@@ -10,8 +10,7 @@ module.exports = function({ types: t }) {
                     value = path.node.source.value, // the last part of: import x from './y'
                     ident,
                     identPad,
-                    replacement,
-                    transforms
+                    replacement
 
                 for (ident of identifiers) {
                     identPad = dels[0] + ident + dels[1]
@@ -20,7 +19,7 @@ module.exports = function({ types: t }) {
                         continue
                     }
 
-                    replacement = process.env[ident] || fallback
+                    replacement = (process.env[ident] || fallback).trim()
 
                     if (replacement !== "") {
                         replacement = prefix + replacement + postfix
@@ -33,14 +32,12 @@ module.exports = function({ types: t }) {
                     return
                 }
 
-                transforms = path.node.specifiers.map(function(specifier) {
-                    return t.importDeclaration(
-                        [specifier],
+                path.replaceWith(
+                    t.importDeclaration(
+                        path.node.specifiers,
                         t.stringLiteral(value)
                     )
-                })
-
-                path.replaceWithMultiple(transforms)
+                )
             }
         }
     }

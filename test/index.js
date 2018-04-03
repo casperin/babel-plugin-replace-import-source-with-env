@@ -1,12 +1,6 @@
 const babel = require("babel-core")
 const tape = require("tape")
 
-function transform(code, opt) {
-    return babel.transform(code, {
-        plugins: [["./src", opt]]
-    }).code
-}
-
 const tests = [
     {
         input: `import x from "./foo";`,
@@ -120,14 +114,40 @@ const tests = [
             identifiers: ["x"]
         },
         description: "Change fallback"
+    },
+
+    {
+        input: `import { x, y } from "./foo/bar{x}.js";\nimport { z } from "zorro{x}";`,
+        output: `import { x, y } from "./foo/bar.y.js";\nimport { z } from "zorro.y";`,
+        envs: [["x", "y"]],
+        options: {
+            identifiers: ["x"]
+        },
+        description: "Works with multiple imports"
+    },
+
+    {
+        input: `import x from "./foo/bar{x}.js";`,
+        output: `import x from "./foo/bar.y.js";`,
+        envs: [["x", "y "]],
+        options: {
+            identifiers: ["x"]
+        },
+        description: "Trims the env variable (windows is weird)"
     }
 ]
+
+function transform(code, opt) {
+    return babel.transform(code, {
+        plugins: [["./src", opt]]
+    }).code
+}
 
 tests.forEach(test => {
     tape(test.description, t => {
         test.envs.forEach(env => (process.env[env[0]] = env[1]))
         const actual = transform(test.input, test.options)
-        t.equal(actual, test.output, "input should match output")
+        t.equal(actual, test.output)
         t.end()
         test.envs.forEach(env => delete process.env[env[0]])
     })
