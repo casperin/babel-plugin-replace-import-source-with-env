@@ -10,6 +10,8 @@ mock the `api` in case you don't have, or need to work with, a real backend
 
 Wherever you find small differences that can be abstracted out into files.
 
+[![CircleCI](https://circleci.com/gh/casperin/babel-plugin-replace-import-source-with-env.svg?style=svg)](https://circleci.com/gh/casperin/babel-plugin-replace-import-source-with-env)
+
 
 ## Install
 
@@ -118,8 +120,3 @@ import api from "./api"
 
 To do this, we only add the prefix (and postfix) if there actually is a
 non-emptly string to replace the `{MOCK}` part with.
-
-
-## Licence
-
-MIT
